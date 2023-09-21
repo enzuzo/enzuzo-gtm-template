@@ -1,0 +1,5 @@
+homepage: "https://enzuzo.com"
+documentation: "https://enzuzo.com"
+versions:
+  - sha: 31eb06df417f79f18b9d10ff752739e6ea463f48
+  - changeNotes: Initial release of template.
