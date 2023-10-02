@@ -1,5 +1,7 @@
 homepage: "https://enzuzo.com"
 documentation: "https://enzuzo.com"
 versions:
+  - sha: badb57ba6b9b0f482ffe4636f00f948e0de379c6
+    changeNotes: Update to use new consent model.
   - sha: 31eb06df417f79f18b9d10ff752739e6ea463f48
-  - changeNotes: Initial release of template.
+    changeNotes: Initial release of template.
