@@ -41,72 +41,34 @@ ___TEMPLATE_PARAMETERS___
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const log = require('logToConsole');
-const Object = require('Object');
 const setDefaultConsentState = require('setDefaultConsentState');
 const updateConsentState = require('updateConsentState');
 const setInWindow = require('setInWindow');
-const getCookieValues = require('getCookieValues');
+const copyFromWindow = require('copyFromWindow');
 const injectScript = require('injectScript');
 
-const CATEGORY_MAPPINGS = {
-  'cookies-functional': ['functionality_storage'],
-  'cookies-preferences': ['personalization_storage'],
-  'cookies-analytics': ['ad_storage', 'analytics_storage'],
-};
-
-const cookieValueToConsentValue = (cookieValue) => {
-  if (cookieValue === 'true') {
-    return 'granted';
-  }
-  else if (cookieValue === 'false') {
-    return 'denied';
-  }
-  else {
-    return null;
-  }
-};
-
-const updateConsentStateFromCookies = () => {
-  const consentObj = {};
-  const entries = Object.entries(CATEGORY_MAPPINGS);
-
-  for (let i = 0; i < entries.length; i++) {
-    const cookie = entries[i][0];
-    const categories = entries[i][1];
-    const cookieValue = getCookieValues(cookie)[0];
-    const value = cookieValueToConsentValue(cookieValue);
-    
-    if (value !== null) {
-      for (let j = 0; j < categories.length; j++) {
-        consentObj[categories[j]] = value;      
-      }
-    }
-  }
-  
-  // Always grant security permissions
-  consentObj['security_storage'] = 'granted';
-  
-  if (Object.keys(consentObj).length > 0) {
-    updateConsentState(consentObj);
+const setConsentStateFromWindow = () => {
+  const consentState = copyFromWindow('enzuzoGtmConsentObj');
+  if (consentState) {
+    updateConsentState(consentState);
   }
 };
 
 setDefaultConsentState({
   'ad_storage': 'denied',
   'analytics_storage': 'denied',
-  'functionality_storage': 'denied',
+  'functionality_storage': 'granted',
   'personalization_storage': 'denied',
-  'security_storage': 'denied',
+  'security_storage': 'granted',
   'wait_for_update': 500
 });
 
 injectScript(data.scriptUrl);
 
 setInWindow('enzuzoGtmConsent', () => {
-  updateConsentStateFromCookies();
+  setConsentStateFromWindow();
 });
 
-updateConsentStateFromCookies();
 
 // Call data.gtmOnSuccess when the tag is finished.
 data.gtmOnSuccess();
@@ -126,10 +88,13 @@ ___WEB_PERMISSIONS___
           "key": "environments",
           "value": {
             "type": 1,
-            "string": "debug"
+            "string": "all"
           }
         }
       ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
     },
     "isRequired": true
   },
@@ -183,51 +148,45 @@ ___WEB_PERMISSIONS___
                     "boolean": true
                   }
                 ]
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "clientAnnotations": {
-      "isEditedByUser": true
-    },
-    "isRequired": true
-  },
-  {
-    "instance": {
-      "key": {
-        "publicId": "get_cookies",
-        "versionId": "1"
-      },
-      "param": [
-        {
-          "key": "cookieAccess",
-          "value": {
-            "type": 1,
-            "string": "specific"
-          }
-        },
-        {
-          "key": "cookieNames",
-          "value": {
-            "type": 2,
-            "listItem": [
-              {
-                "type": 1,
-                "string": "cookies-marketing"
               },
               {
-                "type": 1,
-                "string": "cookies-analytics"
-              },
-              {
-                "type": 1,
-                "string": "cookies-functional"
-              },
-              {
-                "type": 1,
-                "string": "cookies-preferences"
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "enzuzoGtmConsentObj"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
               }
             ]
           }
@@ -452,6 +411,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 9/21/2023, 3:44:30 PM
+Created on 10/2/2023, 3:50:37 PM
 
 
