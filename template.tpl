@@ -14,6 +14,7 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "Enzuzo Cookie Manager",
+  "categories": ["TAG_MANAGEMENT"],
   "brand": {
     "id": "brand_dummy",
     "displayName": "",
