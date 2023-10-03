@@ -47,6 +47,9 @@ const updateConsentState = require('updateConsentState');
 const setInWindow = require('setInWindow');
 const copyFromWindow = require('copyFromWindow');
 const injectScript = require('injectScript');
+const gtagSet = require('gtagSet');
+
+gtagSet('developer_id.dNTg2Nz', true);
 
 const setConsentStateFromWindow = () => {
   const consentState = copyFromWindow('enzuzoGtmConsentObj');
@@ -401,6 +404,16 @@ ___WEB_PERMISSIONS___
       "isEditedByUser": true
     },
     "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "write_data_layer",
+        "versionId": "1"
+      },
+      "param": []
+    },
+    "isRequired": true
   }
 ]
 
@@ -412,6 +425,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 10/2/2023, 3:50:37 PM
+Created on 10/3/2023, 10:49:23 AM
 
 
