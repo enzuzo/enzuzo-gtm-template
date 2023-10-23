@@ -1,6 +1,8 @@
 homepage: "https://enzuzo.com"
-documentation: "https://enzuzo.com"
+documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
+  - sha: 9578c2f88bab044165df4b0b5073a27fc5483093
+    changeNotes: Add proper permisssions to set developer ID.
   - sha: 679aa6b3263e925f13a4302a1b5e0abec78aee4c
     changeNotes: Add Google developer ID.
   - sha: badb57ba6b9b0f482ffe4636f00f948e0de379c6
