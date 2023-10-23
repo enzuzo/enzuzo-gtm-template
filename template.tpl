@@ -49,8 +49,6 @@ const copyFromWindow = require('copyFromWindow');
 const injectScript = require('injectScript');
 const gtagSet = require('gtagSet');
 
-gtagSet('developer_id.dNTg2Nz', true);
-
 const setConsentStateFromWindow = () => {
   const consentState = copyFromWindow('enzuzoGtmConsentObj');
   if (consentState) {
@@ -73,6 +71,7 @@ setInWindow('enzuzoGtmConsent', () => {
   setConsentStateFromWindow();
 });
 
+gtagSet('developer_id.dNTg2Nz', true);
 
 // Call data.gtmOnSuccess when the tag is finished.
 data.gtmOnSuccess();
@@ -411,7 +410,23 @@ ___WEB_PERMISSIONS___
         "publicId": "write_data_layer",
         "versionId": "1"
       },
-      "param": []
+      "param": [
+        {
+          "key": "keyPatterns",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 1,
+                "string": "developer_id.dNTg2Nz"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
     },
     "isRequired": true
   }
@@ -425,6 +440,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 10/3/2023, 10:49:23 AM
+Created on 10/23/2023, 1:57:16 PM
 
 
