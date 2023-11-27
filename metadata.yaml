@@ -1,6 +1,8 @@
 homepage: "https://enzuzo.com"
 documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
+  - sha: 107a53cf0b88b50d504575b76a48c926a5da4e65
+    changeNotes: Add custom data layer event on consent.
   - sha: 9578c2f88bab044165df4b0b5073a27fc5483093
     changeNotes: Add proper permisssions to set developer ID.
   - sha: 679aa6b3263e925f13a4302a1b5e0abec78aee4c
