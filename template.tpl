@@ -5,7 +5,6 @@ Template Gallery Developer Terms of Service available at
 https://developers.google.com/tag-manager/gallery-tos (or such other URL as
 Google may provide), as modified from time to time.
 
-
 ___INFO___
 
 {
@@ -48,11 +47,14 @@ const setInWindow = require('setInWindow');
 const copyFromWindow = require('copyFromWindow');
 const injectScript = require('injectScript');
 const gtagSet = require('gtagSet');
+const createQueue = require('createQueue');
+const dataLayerPush = createQueue('dataLayer');
 
 const setConsentStateFromWindow = () => {
   const consentState = copyFromWindow('enzuzoGtmConsentObj');
   if (consentState) {
     updateConsentState(consentState);
+    dataLayerPush({'event': 'enzuzo_consent_update'});
   }
 };
 
@@ -91,7 +93,7 @@ ___WEB_PERMISSIONS___
           "key": "environments",
           "value": {
             "type": 1,
-            "string": "all"
+            "string": "debug"
           }
         }
       ]
@@ -188,6 +190,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 8,
                     "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "dataLayer"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
                   }
                 ]
               }
@@ -419,6 +460,10 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "developer_id.dNTg2Nz"
+              },
+              {
+                "type": 1,
+                "string": "event"
               }
             ]
           }
@@ -440,6 +485,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 10/23/2023, 1:57:16 PM
+Created on 11/7/2023, 10:11:52 AM
 
 
