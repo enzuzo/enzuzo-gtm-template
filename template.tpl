@@ -50,11 +50,39 @@ const gtagSet = require('gtagSet');
 const createQueue = require('createQueue');
 const dataLayerPush = createQueue('dataLayer');
 
+const isConsentEqual = (lhs, rhs) => { 
+  if (lhs.ad_storage !== rhs.ad_storage) {
+    return false;
+  }
+  
+  if (lhs.analytics_storage !== rhs.analytics_storage) {
+    return false;
+  }
+  
+  if (lhs.personalization_storage !== rhs.personalization_storage) {
+    return false;
+  }
+  
+   if (lhs.personalization_storage !== rhs.personalization_storage) {
+    return false;
+  }
+  
+  if (lhs.security_storage !== rhs.security_storage) {
+    return false;
+  }
+  
+  return true;
+};
+
+let lastConsent = null;
+
 const setConsentStateFromWindow = () => {
   const consentState = copyFromWindow('enzuzoGtmConsentObj');
-  if (consentState) {
+  const isDuplicate = (lastConsent !== null && isConsentEqual(lastConsent, consentState));
+  if (consentState && !isDuplicate) {
     updateConsentState(consentState);
     dataLayerPush({'event': 'enzuzo_consent_update'});
+    lastConsent = consentState;
   }
 };
 
