@@ -2,7 +2,7 @@ homepage: "https://enzuzo.com"
 documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
   - sha: f27a696c940a47a033e8e84ba0a82b29fb73b9b4
-    changeNotes Add duplicate consent detection.
+    changeNotes: Add duplicate consent detection.
   - sha: 107a53cf0b88b50d504575b76a48c926a5da4e65
     changeNotes: Add custom data layer event on consent.
   - sha: 9578c2f88bab044165df4b0b5073a27fc5483093
