@@ -11,5 +11,5 @@ versions:
     changeNotes: Add Google developer ID.
   - sha: badb57ba6b9b0f482ffe4636f00f948e0de379c6
     changeNotes: Update to use new consent model.
-  - sha: 31eb06df417f79f18b9d10ff752739e6ea463f48
+  - sha: cd2df5e98484d72957600d04496aef6ed6fb7aea
     changeNotes: Initial release of template.
