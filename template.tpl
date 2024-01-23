@@ -50,25 +50,21 @@ const gtagSet = require('gtagSet');
 const createQueue = require('createQueue');
 const dataLayerPush = createQueue('dataLayer');
 
+const CONSENT_KEYS = [
+  'ad_storage',
+  'ad_user_data',
+  'ad_personalization',
+  'analytics_storage',
+  'personalization_storage',
+  'functionality_storage',
+  'security_storage'
+];
+
 const isConsentEqual = (lhs, rhs) => { 
-  if (lhs.ad_storage !== rhs.ad_storage) {
+  for (const key of CONSENT_KEYS) {
+    if (lhs[key] !== rhs[key]) {
     return false;
   }
-  
-  if (lhs.analytics_storage !== rhs.analytics_storage) {
-    return false;
-  }
-  
-  if (lhs.personalization_storage !== rhs.personalization_storage) {
-    return false;
-  }
-  
-   if (lhs.personalization_storage !== rhs.personalization_storage) {
-    return false;
-  }
-  
-  if (lhs.security_storage !== rhs.security_storage) {
-    return false;
   }
   
   return true;
@@ -88,6 +84,8 @@ const setConsentStateFromWindow = () => {
 
 setDefaultConsentState({
   'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
   'analytics_storage': 'denied',
   'functionality_storage': 'granted',
   'personalization_storage': 'denied',
@@ -100,6 +98,8 @@ injectScript(data.scriptUrl);
 setInWindow('enzuzoGtmConsent', () => {
   setConsentStateFromWindow();
 });
+
+setInWindow('enzuzoGtmTemplateVersion', 2);
 
 gtagSet('developer_id.dNTg2Nz', true);
 
@@ -245,6 +245,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "dataLayer"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "enzuzoGtmTemplateVersion"
                   },
                   {
                     "type": 8,
@@ -452,6 +491,68 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "security_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_user_data"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_personalization"
                   },
                   {
                     "type": 8,
