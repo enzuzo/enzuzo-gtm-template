@@ -1,6 +1,8 @@
 homepage: "https://enzuzo.com"
 documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
+  - sha: cd76d813ed534874daa4e202cee95d93e87756d2
+    changeNotes: Add option to disable automatic script injection.
   - sha: fc6e900884a19bcd4f23c0e1b167ac91b52aa199
     changeNotes: Add consent mode v2 support.
   - sha: f27a696c940a47a033e8e84ba0a82b29fb73b9b4
