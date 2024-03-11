@@ -13,7 +13,9 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "Enzuzo Cookie Manager",
-  "categories": ["TAG_MANAGEMENT"],
+  "categories": [
+    "TAG_MANAGEMENT"
+  ],
   "brand": {
     "id": "brand_dummy",
     "displayName": "",
@@ -34,6 +36,20 @@ ___TEMPLATE_PARAMETERS___
     "name": "scriptUrl",
     "displayName": "Enzuzo Script URL",
     "simpleValueType": true
+  },
+  {
+    "type": "GROUP",
+    "name": "Advanced",
+    "displayName": "Advanced",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "noScriptInject",
+        "checkboxText": "Do not automatically inject script",
+        "simpleValueType": true
+      }
+    ]
   }
 ]
 
@@ -93,7 +109,9 @@ setDefaultConsentState({
   'wait_for_update': 500
 });
 
+if (!data.noScriptInject) {
 injectScript(data.scriptUrl);
+}
 
 setInWindow('enzuzoGtmConsent', () => {
   setConsentStateFromWindow();
