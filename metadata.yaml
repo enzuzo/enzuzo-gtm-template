@@ -1,6 +1,8 @@
 homepage: "https://enzuzo.com"
 documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
+  - sha: e8530f8800aab9259ecd089d6c839adbc24392c5
+    changeNotes: Allow setting of consent defaults and regional overrides.
   - sha: cd76d813ed534874daa4e202cee95d93e87756d2
     changeNotes: Add option to disable automatic script injection.
   - sha: fc6e900884a19bcd4f23c0e1b167ac91b52aa199
