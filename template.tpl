@@ -61,6 +61,18 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "defaultValue": 1000
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "urlPassthrough",
+        "checkboxText": "URL passthrough",
+        "simpleValueType": true
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "adRedaction",
+        "checkboxText": "Ads data redaction",
+        "simpleValueType": true
       }
     ]
   },
@@ -74,7 +86,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "SELECT",
         "name": "default_analytics_storage",
         "displayName": "analytics_storage",
-        "macrosInSelect": false,
+        "macrosInSelect": true,
         "selectItems": [
           {
             "value": "granted",
@@ -92,7 +104,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "SELECT",
         "name": "default_ad_storage",
         "displayName": "ad_storage",
-        "macrosInSelect": false,
+        "macrosInSelect": true,
         "selectItems": [
           {
             "value": "granted",
@@ -110,7 +122,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "SELECT",
         "name": "default_ad_user_data",
         "displayName": "ad_user_data",
-        "macrosInSelect": false,
+        "macrosInSelect": true,
         "selectItems": [
           {
             "value": "granted",
@@ -128,7 +140,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "SELECT",
         "name": "default_ad_personalization",
         "displayName": "ad_personalization",
-        "macrosInSelect": false,
+        "macrosInSelect": true,
         "selectItems": [
           {
             "value": "granted",
@@ -146,7 +158,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "SELECT",
         "name": "default_personalization_storage",
         "displayName": "personalization_storage",
-        "macrosInSelect": false,
+        "macrosInSelect": true,
         "selectItems": [
           {
             "value": "granted",
@@ -164,7 +176,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "SELECT",
         "name": "default_functionality_storage",
         "displayName": "functionality_storage",
-        "macrosInSelect": false,
+        "macrosInSelect": true,
         "selectItems": [
           {
             "value": "granted",
@@ -182,7 +194,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "SELECT",
         "name": "default_security_storage",
         "displayName": "security_storage",
-        "macrosInSelect": false,
+        "macrosInSelect": true,
         "selectItems": [
           {
             "value": "granted",
@@ -469,6 +481,8 @@ setInWindow('enzuzoGtmConsent', () => {
 setInWindow('enzuzoGtmTemplateVersion', 2);
 
 gtagSet('developer_id.dNTg2Nz', true);
+gtagSet('url_passthrough', data.urlPassthrough);
+gtagSet('ads_data_redaction', data.adRedaction);
 
 // Call data.gtmOnSuccess when the tag is finished.
 data.gtmOnSuccess();
@@ -956,6 +970,14 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "developer_id.dNTg2Nz"
+              },
+              {
+                "type": 1,
+                "string": "ads_data_redaction"
+              },
+              {
+                "type": 1,
+                "string": "url_passthrough"
               },
               {
                 "type": 1,
