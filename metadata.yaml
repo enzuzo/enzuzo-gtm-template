@@ -1,6 +1,8 @@
 homepage: "https://enzuzo.com"
 documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
+  - sha: 2d30c9c2cf26b2883db740e89710990921841f89
+    changeNotes: Allow variables in consent default options and add settings for URL passthrough/ad redaction
   - sha: e8530f8800aab9259ecd089d6c839adbc24392c5
     changeNotes: Allow setting of consent defaults and regional overrides.
   - sha: cd76d813ed534874daa4e202cee95d93e87756d2
