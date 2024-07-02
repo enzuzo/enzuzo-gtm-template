@@ -5,6 +5,7 @@ Template Gallery Developer Terms of Service available at
 https://developers.google.com/tag-manager/gallery-tos (or such other URL as
 Google may provide), as modified from time to time.
 
+
 ___INFO___
 
 {
@@ -397,6 +398,8 @@ const copyFromWindow = require('copyFromWindow');
 const injectScript = require('injectScript');
 const gtagSet = require('gtagSet');
 const createQueue = require('createQueue');
+const getCookieValues = require('getCookieValues');
+
 const dataLayerPush = createQueue('dataLayer');
 
 const CONSENT_KEYS = [
@@ -421,8 +424,7 @@ const isConsentEqual = (lhs, rhs) => {
 
 let lastConsent = null;
 
-const setConsentStateFromWindow = () => {
-  const consentState = copyFromWindow('enzuzoGtmConsentObj');
+const ezUpdateConsentState = (consentState) => {
   const isDuplicate = (lastConsent !== null && isConsentEqual(lastConsent, consentState));
   if (consentState && !isDuplicate) {
     updateConsentState(consentState);
@@ -431,8 +433,45 @@ const setConsentStateFromWindow = () => {
   }
 };
 
+const setConsentStateFromWindow = () => {
+  const consentState = copyFromWindow('enzuzoGtmConsentObj');
+  ezUpdateConsentState(consentState);
+};
+
 const getWaitForUpdateTime = () => {
    return data.waitForUpdateTime || 1000;
+};
+
+const getConsentCookie = (name) => {
+  const values = getCookieValues(name);
+  
+  for (const v of values) {
+    if (v === 'true') {
+      return true;
+    }
+    if (v === 'false') {
+      return false;
+    }
+  }
+  
+  return null;
+};
+
+const getCookieConsentState = () => {
+  const functional = getConsentCookie('cookies-functional') ? 'granted' : 'denied';
+  const marketing = getConsentCookie('cookies-marketing') ? 'granted' : 'denied';
+  const analytics = getConsentCookie('cookies-analytics') ? 'granted' : 'denied';
+  const preferences = getConsentCookie('cookies-preferences') ? 'granted' : 'denied';
+  
+   return {
+    'ad_storage': marketing,
+    'ad_user_data': marketing,
+    'ad_personalization': marketing,
+    'analytics_storage': analytics,
+    'personalization_storage': preferences,
+    'functionality_storage': functional,
+    'security_storage': functional
+   };
 };
 
 const getDefaultConsentState = () => {
@@ -468,6 +507,11 @@ if (data.regionalOverrides) {
   for (const override of data.regionalOverrides) {
     setDefaultConsentState(getRegionalOverride(override));
   }
+}
+
+const cookieConsentPresent = getConsentCookie('cookies-functional') !== null;
+if (cookieConsentPresent) {
+  ezUpdateConsentState(getCookieConsentState());
 }
 
 if (!data.noScriptInject) {
@@ -992,6 +1036,51 @@ ___WEB_PERMISSIONS___
       "isEditedByUser": true
     },
     "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "get_cookies",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "cookieAccess",
+          "value": {
+            "type": 1,
+            "string": "specific"
+          }
+        },
+        {
+          "key": "cookieNames",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 1,
+                "string": "cookies-analytics"
+              },
+              {
+                "type": 1,
+                "string": "cookies-functional"
+              },
+              {
+                "type": 1,
+                "string": "cookies-marketing"
+              },
+              {
+                "type": 1,
+                "string": "cookies-preferences"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
   }
 ]
 
@@ -1004,5 +1093,3 @@ scenarios: []
 ___NOTES___
 
 Created on 11/7/2023, 10:11:52 AM
-
-
