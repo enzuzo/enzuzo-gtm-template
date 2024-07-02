@@ -1,6 +1,8 @@
 homepage: "https://enzuzo.com"
 documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
+  - sha: 1eac9808cf52860a14cedda3a2ebd41b8a976cec
+    changeNotes: Read cookies from template to set consent as early as possible
   - sha: 2d30c9c2cf26b2883db740e89710990921841f89
     changeNotes: Allow variables in consent default options and add settings for URL passthrough/ad redaction
   - sha: e8530f8800aab9259ecd089d6c839adbc24392c5
