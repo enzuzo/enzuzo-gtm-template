@@ -1,7 +1,7 @@
 homepage: "https://enzuzo.com"
 documentation: "https://help.enzuzo.com/en/articles/8340663-google-tag-manager-configuration"
 versions:
-  - sha: c1820d26b2ed9b8f4b489e000197a089a26d9789
+  - sha: 2c6fb5e727ac6ebf0a806bd98f3dc81c6821d4fa
     changeNotes: Add function to fire arbitrary events
   - sha: 1eac9808cf52860a14cedda3a2ebd41b8a976cec
     changeNotes: Read cookies from template to set consent as early as possible
