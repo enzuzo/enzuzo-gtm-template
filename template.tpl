@@ -524,6 +524,10 @@ setInWindow('enzuzoGtmConsent', () => {
 
 setInWindow('enzuzoGtmTemplateVersion', 2);
 
+setInWindow('enzuzoGtmFireEvent', (s) => {
+  dataLayerPush({'event': s});
+});
+
 gtagSet('developer_id.dNTg2Nz', true);
 gtagSet('url_passthrough', data.urlPassthrough);
 gtagSet('ads_data_redaction', data.adRedaction);
@@ -709,6 +713,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "enzuzoGtmTemplateVersion"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "enzuzoGtmFireEvent"
                   },
                   {
                     "type": 8,
