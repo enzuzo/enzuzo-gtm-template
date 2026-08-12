@@ -11,7 +11,7 @@ ___INFO___
 {
   "type": "TAG",
   "id": "cvt_temp_public_id",
-  "version": 1,
+  "version": 3,
   "securityGroups": [],
   "displayName": "Enzuzo Cookie Manager",
   "categories": [
@@ -438,6 +438,21 @@ const setConsentStateFromWindow = () => {
   ezUpdateConsentState(consentState);
 };
 
+const setDefaultConsentStateFromWindow = (consentDefaults) => {
+  if (consentDefaults) {
+    setDefaultConsentState({
+      'ad_storage': consentDefaults.ad_storage,
+      'ad_user_data': consentDefaults.ad_user_data,
+      'ad_personalization': consentDefaults.ad_personalization,
+      'analytics_storage': consentDefaults.analytics_storage,
+      'personalization_storage': consentDefaults.personalization_storage,
+      'functionality_storage': consentDefaults.functionality_storage,
+      'security_storage': consentDefaults.security_storage,
+      'wait_for_update': getWaitForUpdateTime()
+    });
+  }
+};
+
 const getWaitForUpdateTime = () => {
    return data.waitForUpdateTime || 1000;
 };
@@ -522,7 +537,11 @@ setInWindow('enzuzoGtmConsent', () => {
   setConsentStateFromWindow();
 });
 
-setInWindow('enzuzoGtmTemplateVersion', 2);
+setInWindow('enzuzoGtmSetDefaults', (consentDefaults) => {
+  setDefaultConsentStateFromWindow(consentDefaults);
+});
+
+setInWindow('enzuzoGtmTemplateVersion', 3);
 
 setInWindow('enzuzoGtmFireEvent', (s) => {
   dataLayerPush({'event': s});
@@ -596,6 +615,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "enzuzoGtmConsent"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "enzuzoGtmSetDefaults"
                   },
                   {
                     "type": 8,
