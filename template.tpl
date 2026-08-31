@@ -228,7 +228,7 @@ ___TEMPLATE_PARAMETERS___
               "name": "region",
               "displayName": "Region",
               "simpleValueType": true,
-              "valueHint": "US-CA"
+              "valueHint": "DE, NO or US-CA"
             },
             "isUnique": true
           },
@@ -380,7 +380,7 @@ ___TEMPLATE_PARAMETERS___
             "isUnique": false
           }
         ],
-        "help": "Override consent defaults by region here.",
+        "help": "Override consent defaults by region. Enter one or more comma-separated region codes, e.g. DE, NO or US-CA.",
         "newRowButtonText": "Override regional default"
       }
     ]
@@ -454,7 +454,14 @@ const setDefaultConsentStateFromWindow = (consentDefaults) => {
 };
 
 const getWaitForUpdateTime = () => {
-   return data.waitForUpdateTime || 1000;
+   return data.waitForUpdate || data.waitForUpdateTime || 1000;
+};
+
+const splitInput = (input) => {
+  if (!input) return [];
+  return input.split(',')
+    .map(entry => entry.trim())
+    .filter(entry => entry.length !== 0);
 };
 
 const getConsentCookie = (name) => {
@@ -503,7 +510,8 @@ const getDefaultConsentState = () => {
 };
 
 const getRegionalOverride = (override) => {
-   return {
+  const region = splitInput(override.region);
+  const regionalOverride = {
     'ad_storage': override.ad_storage,
     'ad_user_data': override.ad_user_data,
     'ad_personalization': override.ad_personalization,
@@ -511,9 +519,14 @@ const getRegionalOverride = (override) => {
     'personalization_storage': override.personalization_storage,
     'functionality_storage': override.functionality_storage,
     'security_storage': override.security_storage,
-    'region': [override.region],
     'wait_for_update': getWaitForUpdateTime()
   };
+
+  if (region.length > 0) {
+    regionalOverride.region = region;
+  }
+
+  return regionalOverride;
 };
 
 setDefaultConsentState(getDefaultConsentState());
