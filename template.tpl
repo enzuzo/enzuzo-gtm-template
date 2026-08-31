@@ -540,7 +540,13 @@ const enzuzoRegionalOverrides = [];
 if (data.regionalOverrides) {
   for (const override of data.regionalOverrides) {
     const processed = getRegionalOverride(override);
-    setDefaultConsentState(processed);
+    // Only REGION-SPECIFIC overrides are applied at Consent Initialization. A
+    // no-region catch-all ranks BELOW the API region settings, so applying it
+    // globally here would wrongly beat a merchant's configured region defaults;
+    // it is still exposed below, but the cookiebar runtime ignores it.
+    if (processed.region) {
+      setDefaultConsentState(processed);
+    }
     enzuzoRegionalOverrides.push(processed);
   }
 }
