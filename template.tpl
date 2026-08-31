@@ -428,7 +428,9 @@ const ezUpdateConsentState = (consentState) => {
   const isDuplicate = (lastConsent !== null && isConsentEqual(lastConsent, consentState));
   if (consentState && !isDuplicate) {
     updateConsentState(consentState);
-    dataLayerPush({'event': 'enzuzo_consent_update'});
+    // The cookiebar runtime is the sole emitter of `enzuzo_consent_update` (for
+    // all template versions); do not also emit it here or merchant tags that
+    // trigger on it would fire twice per consent change.
     lastConsent = consentState;
   }
 };
@@ -531,11 +533,18 @@ const getRegionalOverride = (override) => {
 
 setDefaultConsentState(getDefaultConsentState());
 
+// Apply the regional overrides at Consent Initialization (early, region-scoped)
+// AND expose the processed list so the cookiebar runtime can honor the
+// region-specific ones as the authoritative default (template > API precedence).
+const enzuzoRegionalOverrides = [];
 if (data.regionalOverrides) {
   for (const override of data.regionalOverrides) {
-    setDefaultConsentState(getRegionalOverride(override));
+    const processed = getRegionalOverride(override);
+    setDefaultConsentState(processed);
+    enzuzoRegionalOverrides.push(processed);
   }
 }
+setInWindow('enzuzoGtmRegionalOverrides', enzuzoRegionalOverrides, true);
 
 const cookieConsentPresent = getConsentCookie('cookies-functional') !== null;
 if (cookieConsentPresent) {
@@ -640,6 +649,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 8,
                     "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "enzuzoGtmRegionalOverrides"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
                   }
                 ]
               },
