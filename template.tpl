@@ -228,7 +228,7 @@ ___TEMPLATE_PARAMETERS___
               "name": "region",
               "displayName": "Region",
               "simpleValueType": true,
-              "valueHint": "US-CA"
+              "valueHint": "DE, NO or US-CA"
             },
             "isUnique": true
           },
@@ -380,7 +380,7 @@ ___TEMPLATE_PARAMETERS___
             "isUnique": false
           }
         ],
-        "help": "Override consent defaults by region here.",
+        "help": "Override consent defaults by region. Enter one or more comma-separated region codes, e.g. DE, NO or US-CA.",
         "newRowButtonText": "Override regional default"
       }
     ]
@@ -428,7 +428,9 @@ const ezUpdateConsentState = (consentState) => {
   const isDuplicate = (lastConsent !== null && isConsentEqual(lastConsent, consentState));
   if (consentState && !isDuplicate) {
     updateConsentState(consentState);
-    dataLayerPush({'event': 'enzuzo_consent_update'});
+    // The cookiebar runtime is the sole emitter of `enzuzo_consent_update` (for
+    // all template versions); do not also emit it here or merchant tags that
+    // trigger on it would fire twice per consent change.
     lastConsent = consentState;
   }
 };
@@ -438,8 +440,30 @@ const setConsentStateFromWindow = () => {
   ezUpdateConsentState(consentState);
 };
 
+const setDefaultConsentStateFromWindow = (consentDefaults) => {
+  if (consentDefaults) {
+    setDefaultConsentState({
+      'ad_storage': consentDefaults.ad_storage,
+      'ad_user_data': consentDefaults.ad_user_data,
+      'ad_personalization': consentDefaults.ad_personalization,
+      'analytics_storage': consentDefaults.analytics_storage,
+      'personalization_storage': consentDefaults.personalization_storage,
+      'functionality_storage': consentDefaults.functionality_storage,
+      'security_storage': consentDefaults.security_storage,
+      'wait_for_update': getWaitForUpdateTime()
+    });
+  }
+};
+
 const getWaitForUpdateTime = () => {
-   return data.waitForUpdateTime || 1000;
+   return data.waitForUpdate || data.waitForUpdateTime || 1000;
+};
+
+const splitInput = (input) => {
+  if (!input) return [];
+  return input.split(',')
+    .map(entry => entry.trim())
+    .filter(entry => entry.length !== 0);
 };
 
 const getConsentCookie = (name) => {
@@ -488,7 +512,8 @@ const getDefaultConsentState = () => {
 };
 
 const getRegionalOverride = (override) => {
-   return {
+  const region = splitInput(override.region);
+  const regionalOverride = {
     'ad_storage': override.ad_storage,
     'ad_user_data': override.ad_user_data,
     'ad_personalization': override.ad_personalization,
@@ -496,22 +521,47 @@ const getRegionalOverride = (override) => {
     'personalization_storage': override.personalization_storage,
     'functionality_storage': override.functionality_storage,
     'security_storage': override.security_storage,
-    'region': [override.region],
     'wait_for_update': getWaitForUpdateTime()
   };
+
+  if (region.length > 0) {
+    regionalOverride.region = region;
+  }
+
+  return regionalOverride;
 };
 
 setDefaultConsentState(getDefaultConsentState());
 
+// Apply the regional overrides at Consent Initialization (early, region-scoped)
+// AND expose the processed list so the cookiebar runtime can honor the
+// region-specific ones as the authoritative default (template > API precedence).
+const enzuzoRegionalOverrides = [];
 if (data.regionalOverrides) {
   for (const override of data.regionalOverrides) {
-    setDefaultConsentState(getRegionalOverride(override));
+    const processed = getRegionalOverride(override);
+    // Only REGION-SPECIFIC overrides are applied at Consent Initialization. A
+    // no-region catch-all ranks BELOW the API region settings, so applying it
+    // globally here would wrongly beat a merchant's configured region defaults;
+    // it is still exposed below, but the cookiebar runtime ignores it.
+    if (processed.region) {
+      setDefaultConsentState(processed);
+    }
+    enzuzoRegionalOverrides.push(processed);
   }
 }
+setInWindow('enzuzoGtmRegionalOverrides', enzuzoRegionalOverrides, true);
 
 const cookieConsentPresent = getConsentCookie('cookies-functional') !== null;
 if (cookieConsentPresent) {
   ezUpdateConsentState(getCookieConsentState());
+}
+
+// A banner that loaded before GTM has already published its regional state;
+// use it as the default.
+const bannerConsent = copyFromWindow('enzuzoGtmConsentObj');
+if (bannerConsent) {
+  setDefaultConsentStateFromWindow(bannerConsent);
 }
 
 if (!data.noScriptInject) {
@@ -522,7 +572,11 @@ setInWindow('enzuzoGtmConsent', () => {
   setConsentStateFromWindow();
 });
 
-setInWindow('enzuzoGtmTemplateVersion', 2);
+setInWindow('enzuzoGtmSetDefaults', (consentDefaults) => {
+  setDefaultConsentStateFromWindow(consentDefaults);
+});
+
+setInWindow('enzuzoGtmTemplateVersion', 3);
 
 setInWindow('enzuzoGtmFireEvent', (s) => {
   dataLayerPush({'event': s});
@@ -596,6 +650,84 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "enzuzoGtmConsent"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "enzuzoGtmRegionalOverrides"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "enzuzoGtmSetDefaults"
                   },
                   {
                     "type": 8,
