@@ -11,7 +11,7 @@ ___INFO___
 {
   "type": "TAG",
   "id": "cvt_temp_public_id",
-  "version": 3,
+  "version": 1,
   "securityGroups": [],
   "displayName": "Enzuzo Cookie Manager",
   "categories": [
@@ -555,6 +555,13 @@ setInWindow('enzuzoGtmRegionalOverrides', enzuzoRegionalOverrides, true);
 const cookieConsentPresent = getConsentCookie('cookies-functional') !== null;
 if (cookieConsentPresent) {
   ezUpdateConsentState(getCookieConsentState());
+}
+
+// A banner that loaded before GTM has already published its regional state;
+// use it as the default.
+const bannerConsent = copyFromWindow('enzuzoGtmConsentObj');
+if (bannerConsent) {
+  setDefaultConsentStateFromWindow(bannerConsent);
 }
 
 if (!data.noScriptInject) {
